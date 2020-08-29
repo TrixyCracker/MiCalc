@@ -4,6 +4,10 @@
 
 #include "lib/cstring/cstring.h"
 
+#define ERROR "[!] "
+
+#define VERSION "2.0.0"
+
 void comestero(void);
 void mizip(void);
 void dump_parser(void);
@@ -18,27 +22,36 @@ uint8 char_to_uint8(char _c);
 
 void wait_input(void);
 
+char buffer[1024];
+
 //Functions
 int main(void)
 {
 
 	while (1)
 	{
-
-		printf("[1] MiZip keys calculator \n");
+		printf("------------------------------\n");
+		printf("MICALC v." VERSION "\n");
+		printf("------------------------------\n");
+		printf("[1] MiZip keys calculator     \n");
 		printf("[2] Comestero keys calculator \n");
-		printf("[3] Dump parser \n");
-		printf("[9] Exit \n");
+		printf("[3] Dump parser               \n");
+		printf("[9] Exit                      \n");
+		printf("------------------------------\n");
 
-		int choose;
-		scanf("%d", &choose);
+		printf(" => ");
+		scanf("%s", buffer);
+
+		int choose = string_to_int(buffer);
+
+		printf("\n\n\n\n");
 
 		if (choose == 1) mizip();
 		else if (choose == 2) comestero();
 		else if (choose == 3) dump_parser();
-		else if (choose == 9) break;
-		
+		else if (choose == 9) break;	
 
+		printf("\n\n\n\n");
 	}
 
 	return 0;
@@ -52,20 +65,19 @@ void mizip(void)
 	uint8 KeyB[5][6] = {
 		[0] = {0xB4, 0xC1, 0x32, 0x43, 0x9E, 0xEF}};
 
-	char UID_string[9];
-	printf("Enter the UID of MiZip: 0x");
-	scanf("%9s", UID_string);
+	printf("Enter the UID of MiZip: [HEX] ");
+	scanf("%s", buffer);
 
-	if (string_lenght(UID_string) < 8) 
+	if (string_lenght(buffer) != 8) 
 	{
-		printf("[!] UID must be 8 characters lenght! \n");
+		printf(ERROR "UID must be 8 characters lenght! \n");
 		return;
 	}
 
 	uint8 UID[4];
-	if (!string_to_uint8(UID, UID_string)) 
+	if (!string_to_uint8_array(UID, buffer)) 
 	{
-		printf("[!] Invalid characters into UID! \n");
+		printf(ERROR "Invalid characters into UID! \n");
 		return;
 	}
 
@@ -102,45 +114,41 @@ void comestero(void)
 		[0] = {0xA0, 0xA1, 0xA2, 0xA3, 0xA4, 0xA5}};
 	uint8 comestero_keys_B[16][6];
 
-	//sas
-	char known_key_string[13];
+	//Key operations
 	printf("Enter the known key: [HEX] ");
-	scanf("%13s", known_key_string);
+	scanf("%s", buffer);
 
-	for (int i = 0; i < 12; ++i)
+	if (string_lenght(buffer) != 12) 
 	{
-
-		if (char_to_uint8(known_key_string[i]) == 0xFF) 
-		{
-			printf("[!] Please enter a valid key! \n");
-			return;
-		}
-
+		printf(ERROR "Key must be 12 characters lenght!");
+		return;
 	}
-	//---
 
-	//sas
-	int known_key_block;
+	uint8 known_key[6];
+	string_to_uint8_array(known_key, buffer);
+
+	//block operations
 	printf("Enter the block of the known key: [HEX] ");
-	scanf("%d", &known_key_block);
+	scanf("%s", buffer);
+
+	int known_key_block = string_to_int(buffer);
 
 	if (known_key_block < 0 || known_key_block > 15) 
 	{
-		printf("[!] Please enter a valid block! \n");
+		printf(ERROR "Please enter a valid block! \n");
 		return;
 	}
 	//---
 
-	//sas
-	char known_key_type;
+	//type operations
 	printf("Enter the type of known key: [A/b] ");
-	scanf(" %c", &known_key_type);
+	scanf("%s", buffer);
 
-	known_key_type = char_uppercase(known_key_type); //know key type ius now uppercase
+	char known_key_type = char_uppercase(buffer[0]); //know key type ius now uppercase
 
 	if (known_key_type != 'A' && known_key_type != 'B') 
 	{
-		printf("[!] Please enter a valid type!\n");
+		printf(ERROR "Please enter a valid type!\n");
 		return;
 	}
 	//---
@@ -153,16 +161,14 @@ void comestero(void)
 			return;
 		}
 
-		for (int i = 0; i < 6; i++)
-			comestero_keys_A[known_key_block][i] = char_to_uint8(known_key_string[i * 2]) * 16 + char_to_uint8(known_key_string[(i * 2) + 1]);
+		memory_copy(comestero_keys_A[known_key_block], known_key, sizeof(known_key));
 
 		comestero_calculate_key(comestero_keys_B[known_key_block], comestero_keys_A[known_key_block], known_key_block, '0');
 	}
 	else if (known_key_type == 'B')
 	{
 
-		for (int i = 0; i < 6; i++)
-			comestero_keys_B[known_key_block][i] = char_to_uint8(known_key_string[i * 2]) * 16 + char_to_uint8(known_key_string[(i * 2) + 1]);
+		memory_copy(comestero_keys_B[known_key_block], known_key, sizeof(known_key));
 
 		if (known_key_block == 0x0)
 		{
@@ -198,6 +204,11 @@ void comestero(void)
 		block += 1;
 	}
 
+	printf("\n\n");
+
+	printf("Comestero keys (Known key: 0x");
+	for (int i = 0; i < 6; ++i) printf("%02X", known_key[i]);
+	printf(", Block: %d, Key type: %c): \n", known_key_block, known_key_type);
 	for (int block = 0; block < 16; ++block)
 	{
 

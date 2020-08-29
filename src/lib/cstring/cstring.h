@@ -2,10 +2,13 @@
 
 typedef unsigned char uint8;
 
-int string_to_uint8(uint8 * _Dest, char * _Str);
-uint8 char_to_uint8(char _c);
+int string_to_int(const char * _Str);
+uint8 char_to_int(const char _Char);
 
-void memory_copy(void * _Dest, const void * _Src, int _Size);
+int string_to_uint8_array(uint8 * _Dest, const char * _Str);
+uint8 char_to_uint8(const char _Char);
+
+void memory_copy(void * _Dest, const void * _Src, const int _Size);
 
 int string_lenght(const char * _Str);
 
@@ -19,7 +22,7 @@ void string_addstring(char * _Dest, const char * _Str);
 void string_addchar(char * _Str, const char _c);
 
 void string_lowercase(char * _Dest, const char * _Str);
-void string_uppercase(char * _Dest, const char * _Str);
+char char_lowercase(const char _Char);
 
-char char_lowercase(const char _char);
-char char_uppercase(const char _char);
+void string_uppercase(char * _Dest, const char * _Str);
+char char_uppercase(const char _Char);
