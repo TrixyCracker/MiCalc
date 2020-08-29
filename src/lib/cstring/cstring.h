@@ -1,5 +1,10 @@
 #pragma once
 
+typedef unsigned char uint8;
+
+int string_to_uint8(uint8 * _Dest, char * _Str);
+uint8 char_to_uint8(char _c);
+
 void memory_copy(void * _Dest, const void * _Src, int _Size);
 
 int string_lenght(const char * _Str);

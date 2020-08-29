@@ -6,9 +6,7 @@
 
 void comestero(void);
 void mizip(void);
-
-//Typedef
-typedef unsigned char uint8;
+void dump_parser(void);
 
 //Declaration of functions
 
@@ -29,6 +27,7 @@ int main(void)
 
 		printf("[1] MiZip keys calculator \n");
 		printf("[2] Comestero keys calculator \n");
+		printf("[3] Dump parser \n");
 		printf("[9] Exit \n");
 
 		int choose;
@@ -36,29 +35,13 @@ int main(void)
 
 		if (choose == 1) mizip();
 		else if (choose == 2) comestero();
+		else if (choose == 3) dump_parser();
 		else if (choose == 9) break;
 		
 
 	}
 
-	wait_input();
-
 	return 0;
-}
-
-void wait_input(void)
-{
-
-#ifdef _WIN32
-
-	printf("Press enter to close the program...\n");
-
-	getchar(); // '\r'
-	getchar(); // '\n'
-
-#endif
-
-	exit(0);
 }
 
 void mizip(void) 
@@ -73,24 +56,18 @@ void mizip(void)
 	printf("Enter the UID of MiZip: 0x");
 	scanf("%9s", UID_string);
 
-	//Check if is valid UID
-	for (int i = 0; i < 8; i++)
+	if (string_lenght(UID_string) < 8) 
 	{
-		if (char_to_uint8(UID_string[i]) == 0xFF)
-		{
-			printf("[!] Please enter a valid UID. \n");
-			wait_input();
-		}
+		printf("[!] UID must be 8 characters lenght! \n");
+		return;
 	}
-	//---
 
-	//UID string to uint8 array
 	uint8 UID[4];
-	for (int i = 0; i < 4; i++)
+	if (!string_to_uint8(UID, UID_string)) 
 	{
-		UID[i] = char_to_uint8(UID_string[i * 2]) * 16 + char_to_uint8(UID_string[(i * 2) + 1]);
+		printf("[!] Invalid characters into UID! \n");
+		return;
 	}
-	//---
 
 	printf("\nMizip keys (UID: 0x");
 	for (int i = 0; i < 4; i++)
@@ -127,7 +104,7 @@ void comestero(void)
 
 	//sas
 	char known_key_string[13];
-	printf("Inserisci la chiave: [HEX] ");
+	printf("Enter the known key: [HEX] ");
 	scanf("%13s", known_key_string);
 
 	for (int i = 0; i < 12; ++i)
@@ -136,7 +113,7 @@ void comestero(void)
 		if (char_to_uint8(known_key_string[i]) == 0xFF) 
 		{
 			printf("[!] Please enter a valid key! \n");
-			exit(1);
+			return;
 		}
 
 	}
@@ -144,27 +121,27 @@ void comestero(void)
 
 	//sas
 	int known_key_block;
-	printf("Inserisci il numero del blocco di cui conosci la chiave: [HEX] ");
+	printf("Enter the block of the known key: [HEX] ");
 	scanf("%d", &known_key_block);
 
 	if (known_key_block < 0 || known_key_block > 15) 
 	{
 		printf("[!] Please enter a valid block! \n");
-		exit(1);
+		return;
 	}
 	//---
 
 	//sas
 	char known_key_type;
-	printf("Inserisci il tipo di chiave: [A/b] ");
+	printf("Enter the type of known key: [A/b] ");
 	scanf(" %c", &known_key_type);
 
 	known_key_type = char_uppercase(known_key_type); //know key type ius now uppercase
 
 	if (known_key_type != 'A' && known_key_type != 'B') 
 	{
-		printf("[!] Please enter a valid type! \n");
-		exit(1);
+		printf("[!] Please enter a valid type!\n");
+		return;
 	}
 	//---
 
@@ -172,7 +149,8 @@ void comestero(void)
 	{
 
 		if (known_key_block == 0x0) {
-			printf("[!] Chiave non valida!\n");
+			printf("[!] !\n");
+			return;
 		}
 
 		for (int i = 0; i < 6; i++)
@@ -223,16 +201,16 @@ void comestero(void)
 	for (int block = 0; block < 16; ++block)
 	{
 
-		printf("\tBlock %X:\n", block);
+		printf("\t- Block %X:\n", block);
 
-		printf("\t\tKey A: 0x");
+		printf("\t\t> Key A: 0x");
 		for (int byte = 0; byte < 6; ++byte)
 		{
 			printf("%02X", comestero_keys_A[block][byte]);
 		}
 		printf("\n");
 
-		printf("\t\tKey B: 0x");
+		printf("\t\t> Key B: 0x");
 		for (int byte = 0; byte < 6; ++byte)
 		{
 			printf("%02X", comestero_keys_B[block][byte]);
@@ -358,43 +336,6 @@ void mizip_calculate_key(uint8 _Dest[6], const uint8 _UID[4], const uint8 _Block
 	}
 
 }
-
-uint8 char_to_uint8(char _c)
-{
-
-	if (_c == '0')
-		return 0x00;
-	else if (_c == '1')
-		return 0x1;
-	else if (_c == '2')
-		return 0x2;
-	else if (_c == '3')
-		return 0x3;
-	else if (_c == '4')
-		return 0x4;
-	else if (_c == '5')
-		return 0x5;
-	else if (_c == '6')
-		return 0x6;
-	else if (_c == '7')
-		return 0x7;
-	else if (_c == '8')
-		return 0x8;
-	else if (_c == '9')
-		return 0x9;
-	else if (_c == 'A' || _c == 'a')
-		return 0xA;
-	else if (_c == 'B' || _c == 'b')
-		return 0xB;
-	else if (_c == 'C' || _c == 'c')
-		return 0xC;
-	else if (_c == 'D' || _c == 'd')
-		return 0xD;
-	else if (_c == 'E' || _c == 'e')
-		return 0xE;
-	else if (_c == 'F' || _c == 'f')
-		return 0xF;
-	else
-		return 0xFF;
-
-}
+ void dump_parser(void) {
+	 return;
+ }
