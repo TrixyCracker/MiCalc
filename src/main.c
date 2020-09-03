@@ -228,6 +228,26 @@ void comestero(void)
 		}
 		printf("\n");
 	}
+
+	//Export
+	FILE * keys_file;
+	keys_file = fopen("comestero", "w");
+
+	for(int a = 0; a < 16; ++a) 
+	{
+
+		for (int b = 0; b < 6; ++b)
+			fprintf(keys_file, "%02X", comestero_keys_A[a][b]);
+		fprintf(keys_file, "%c", (char)0x0A);
+
+		for (int b = 0; b < 6; ++b)
+			fprintf(keys_file, "%02X", comestero_keys_B[a][b]);
+		fprintf(keys_file, "%c", (char)0x0A);
+
+	}
+
+	fclose(keys_file);
+
 }
 
 void comestero_calculate_key(uint8 _Dest[6], const uint8 _Previous_KEY[6], const uint8 _Block, const char _Type)
