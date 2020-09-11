@@ -1,23 +1,23 @@
 #include "tag_utils.h"
 
-void get_first_block_key(uint8 _Dest[6], const uint8 _KnownKey, const uint8 _KnownKeyBlock, const uint8 _KnownKeyType)
+void get_first_block_key(uint8_t _Dest[6], const uint8_t _KnownKey, const uint8_t _KnownKeyBlock, const uint8_t _KnownKeyType)
 {
 	
 }
 
-void comestero_calculate_key(uint8 _Dest[6], const uint8 _Previous_KEY[6], const uint8 _Block, const char _Type)
+void comestero_calculate_key(uint8_t _Dest[6], const uint8_t _Previous_KEY[6], const uint8_t _Block, const char _Type)
 {
 
 	if (_Block == 0 && _Type == 'A') 
 	{
-		const uint8 default_key[6] = { 0xA0, 0xA1, 0xA2, 0xA3, 0xA4, 0xA5 };
+		const uint8_t default_key[6] = { 0xA0, 0xA1, 0xA2, 0xA3, 0xA4, 0xA5 };
 
 		for (int i = 0; i < 6; ++i) _Dest[i] = default_key[i];
 
 		return;
 	}
 
-	const uint8 xor_table_A[16][6] = {
+	const uint8_t xor_table_A[16][6] = {
 		[1] = {0x0E, 0x3F, 0x57, 0xAF, 0x05, 0x4B},
 		[2] = {0x03, 0x85, 0x64, 0x9A, 0x45, 0xCE},
 		[3] = {0x01, 0x52, 0xD0, 0x81, 0x9A, 0x49},
@@ -35,7 +35,7 @@ void comestero_calculate_key(uint8 _Dest[6], const uint8 _Previous_KEY[6], const
 		[15] = {0x01, 0x32, 0x86, 0xEB, 0x2B, 0xD2}
 	};
 
-	const uint8 xor_table_B[16][6] = {
+	const uint8_t xor_table_B[16][6] = {
 		[0] = {0x0F, 0xC3, 0x7E, 0xD8, 0xFA, 0x5C},
 		[1] = {0x01, 0xB2, 0x8E, 0xEC, 0xB4, 0x3B},
 		[2] = {0x03, 0x80, 0x91, 0xFF, 0xC7, 0x8B},
@@ -54,7 +54,7 @@ void comestero_calculate_key(uint8 _Dest[6], const uint8 _Previous_KEY[6], const
 		[15] = {0x01, 0xAE, 0x6E, 0x3A, 0x05, 0xD9}
 	};
 
-	const uint8 xor_table_switch[16][6] = {
+	const uint8_t xor_table_switch[16][6] = {
 		[1] = {0x10, 0x7B, 0x94, 0x22, 0x59, 0x24},
 		[2] = {0x10, 0x7E, 0x61, 0x47, 0xDB, 0x61},
 		[3] = {0x10, 0x5A, 0x1C, 0x03, 0x02, 0x4D},
@@ -96,24 +96,24 @@ void comestero_calculate_key(uint8 _Dest[6], const uint8 _Previous_KEY[6], const
 
 }
 
-void mizip_calculate_key(uint8 _Dest[6], const uint8 _UID[4], const uint8 _Block, const char _Type)
+void mizip_calculate_key(uint8_t _Dest[6], const uint8_t _UID[4], const uint8_t _Block, const char _Type)
 {
 
 	//Key of block 0 is already defined
 	if (_Block == 0)
 		return;
 
-	const uint8 byte_rules_keyA[6] = {0, 1, 2, 3, 0, 1};
+	const uint8_t byte_rules_keyA[6] = {0, 1, 2, 3, 0, 1};
 
-	const uint8 byte_rules_keyB[6] = {2, 3, 0, 1, 2, 3};
+	const uint8_t byte_rules_keyB[6] = {2, 3, 0, 1, 2, 3};
 
-	const uint8 xor_table_keyA[5][6] = {
+	const uint8_t xor_table_keyA[5][6] = {
 		[1] = {0x09, 0x12, 0x5A, 0x25, 0x89, 0xE5},
 		[2] = {0xAB, 0x75, 0xC9, 0x37, 0x92, 0x2F},
 		[3] = {0xE2, 0x72, 0x41, 0xAF, 0x2C, 0x09},
 		[4] = {0x31, 0x7A, 0xB7, 0x2F, 0x44, 0x90}};
 
-	const uint8 xor_table_keyB[5][6] = {
+	const uint8_t xor_table_keyB[5][6] = {
 		[1] = {0xF1, 0x2C, 0x84, 0x53, 0xD8, 0x21},
 		[2] = {0x73, 0xE7, 0x99, 0xFE, 0x32, 0x41},
 		[3] = {0xAA, 0x4D, 0x13, 0x76, 0x56, 0xAE},
