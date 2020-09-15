@@ -3,7 +3,7 @@
 int string_to_int(const char * _Str) 
 {
 
-    int lenght = string_lenght(_Str);
+    const int lenght = string_lenght(_Str);
 
     int result = 0;
     for (int i = 0; i < lenght; ++i)
@@ -43,7 +43,7 @@ uint8 char_to_int(const char _Char)
 int string_to_uint8_array(uint8 * _Dest, const char * _Str) 
 {
 
-    int lenght = string_lenght(_Str);
+    const int lenght = string_lenght(_Str);
 
     for (int i = 0; i < lenght; ++i) {
 
@@ -127,7 +127,7 @@ void string_set(char * _Str, const int _Size, const int _Value)
 }
 
 void string_copy(char * _Dest, const char * _Str) {
-    int strlen = string_lenght(_Str);
+    const int strlen = string_lenght(_Str);
 
     for (int i = 0; i < strlen; i++)
         _Dest[i] = _Str[i];
@@ -136,7 +136,7 @@ void string_copy(char * _Dest, const char * _Str) {
 }
 
 int string_compare(const char * _Str1, const char * _Str2) {
-    int strlen = string_lenght(_Str1);
+    const int strlen = string_lenght(_Str1);
 
     for (int i = 0; i <= strlen; i++) {
 
@@ -149,7 +149,7 @@ int string_compare(const char * _Str1, const char * _Str2) {
 }
 
 void string_addstring(char * _Dest, const char * _Str) {
-    int strlen = string_lenght(_Str);
+    const int strlen = string_lenght(_Str);
 
     for (int i = 0; i <= strlen; i++)
         string_addchar(_Dest, _Str[i]);
@@ -158,7 +158,7 @@ void string_addstring(char * _Dest, const char * _Str) {
 
 void string_addchar(char * _Dest, const char _c) {
 
-    int strlen = string_lenght(_Dest);
+    const int strlen = string_lenght(_Dest);
 
     _Dest[strlen] = _c;
     _Dest[strlen + 1] = '\0';
@@ -166,7 +166,7 @@ void string_addchar(char * _Dest, const char _c) {
 }
 
 void string_lowercase(char * _Dest, const char * _Str) {
-    int strlen = string_lenght(_Str);
+    const int strlen = string_lenght(_Str);
 
     for (int i = 0; i < strlen; i++)
         _Dest[i] = char_lowercase(_Str[i]);
@@ -175,7 +175,7 @@ void string_lowercase(char * _Dest, const char * _Str) {
 }
 
 void string_uppercase(char * _Dest, const char * _Str) {
-    int strlen = string_lenght(_Str);
+    const int strlen = string_lenght(_Str);
 
     for (int i = 0; i < strlen; i++)
         _Dest[i] = char_uppercase(_Str[i]);
@@ -184,8 +184,8 @@ void string_uppercase(char * _Dest, const char * _Str) {
 }
 
 char char_lowercase(const char _Char) {
-    char lower[27] = "abcdefghijklmnopqrstuvwxyz";
-    char upper[27] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const char lower[27] = "abcdefghijklmnopqrstuvwxyz";
+    const char upper[27] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     for (int i = 0; i < 27; i++) {
 
@@ -198,8 +198,8 @@ char char_lowercase(const char _Char) {
 }
 
 char char_uppercase(const char _Char) {
-    char lower[27] = "abcdefghijklmnopqrstuvwxyz";
-    char upper[27] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const char lower[27] = "abcdefghijklmnopqrstuvwxyz";
+    const char upper[27] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     for (int i = 0; i < 27; i++) {
 
