@@ -342,19 +342,39 @@ void sas() {
 	const uint8_t uid6[4] = {0x00, 0x00, 0x7F, 0x00};
 	//----
 
-
-	uint8_t xor1[4];
-	uint8_t xor2[4];
-	for(int i = 0; i < 32; ++i) 
+	int a = 0;
+	uint8_t temp;
+	uint8_t xor;
+	for (int i = 0; i < 16; ++i) 
 	{
+		xor = 0;
 
-		for (int x = 0; x < 6; x++) {
+		printf("%i: ", i + 1);
 
-			if ( (uid1[0] ^ keys1[i][x]) == (uid2[0] ^ keys2[i][x]) ) {
-				printf("Si!, chiave: %d, blocco: %d\n", i, x);
-			}
+		for (int i2 = 0; i2 < 4; ++i2)
+		{
+
+			if (i2 == 0)
+				a =  (i >> i2) & 0b0001;
+			else if (i2 == 1)
+				a =  (i >> i2) & 0b001;
+			else if (i2 == 2)
+				a = (i >> i2) & 0b01;
+			else if (i2 == 3)
+				a = (i >> i2) & 0b1;
+
+			if (a == 0b1)
+				temp = ~uid5[i2];
+			else
+				temp = uid5[i2];
+
+			xor ^= temp ^ 0b01110111;
+
+			printf("%02X ", temp);
 
 		}
+
+		printf("- xor: %02X \n", xor);
 
 	}
 
